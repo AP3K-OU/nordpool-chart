@@ -1,11 +1,27 @@
 // TODO: Võrgutasud ei sisalda riikliku pühi
-import { Chart, LinearScale, CategoryScale, BarController, BarElement, Legend, Tooltip } from 'chart.js'
-Chart.register(LinearScale, CategoryScale, BarController, BarElement, Legend, Tooltip)
+import {
+  BarController,
+  BarElement,
+  CategoryScale,
+  Chart,
+  Legend,
+  LinearScale,
+  Tooltip,
+} from 'chart.js'
+
+Chart.register(
+  LinearScale,
+  CategoryScale,
+  BarController,
+  BarElement,
+  Legend,
+  Tooltip,
+)
 
 type TooltipItem = {
   label: string
   parsed: {
-    x: number,
+    x: number
     y: number
   }
 }
@@ -17,7 +33,7 @@ type DataPoint = {
 
 class NordpoolChart extends HTMLElement {
   #canvas!: HTMLCanvasElement
-  #chart: any
+  #chart!: Chart
   #shadowRoot: ShadowRoot
   #UPDATE_TIME = 15
   #settings = {
@@ -28,15 +44,15 @@ class NordpoolChart extends HTMLElement {
       },
       2: {
         day: 10.59,
-        night: 6.16
+        night: 6.16,
       },
       3: {
         day: 6.92,
-        night: 4.00
+        night: 4.00,
       },
       4: {
         day: 4.50,
-        night: 2.56
+        night: 2.56,
       },
       5: {
         day: 6.27,
@@ -97,16 +113,19 @@ dialog #close {
     super()
 
     this.#shadowRoot = this.attachShadow({ mode: 'open' })
-      this.loadSettings()
-      this.makeCanvas()
-      this.makeSettings()
-      this.makeStyle()
-      this.makeChart()
+    this.loadSettings()
+    this.makeCanvas()
+    this.makeSettings()
+    this.makeStyle()
+    this.makeChart()
   }
 
   makeChart() {
     this.getThreeDaysData().then((data) => {
-      let transferPrice: number[] = [...this.type5Price(), ...this.type5Price()]
+      let transferPrice: number[] = [
+        ...this.type5Price(),
+        ...this.type5Price(),
+      ]
       if (this.#settings.transferType === 4) {
         transferPrice = [...this.type4Price(), ...this.type4Price()]
       }
@@ -131,15 +150,14 @@ dialog #close {
       } else {
         combinedData = data.needed.concat(data.current)
       }
-      
-      let transferPriceMap = transferPrice.map((price, index) => {
+
+      const transferPriceMap = transferPrice.map((price, index) => {
         return {
           x: combinedData[index].x,
           y: price,
         }
       })
 
-      
       const colors = combinedData.map((dataPoint, index) => {
         if (currentDate === dataPoint.x) {
           currentPrice = dataPoint.y as string
@@ -152,7 +170,7 @@ dialog #close {
       if (this.#chart) {
         this.#chart.destroy()
       }
-      
+
       // @ts-ignore Chart not defined
       this.#chart = new Chart(this.#canvas, {
         type: 'bar',
@@ -175,9 +193,12 @@ dialog #close {
               barPercentage: 1,
             },
             {
-              label: `Kokku ${Number(Number(currentTransferPrice) + Number(currentPrice)).toFixed(2)} s/kWh`,
+              label: `Kokku ${
+                Number(Number(currentTransferPrice) + Number(currentPrice))
+                  .toFixed(2)
+              } s/kWh`,
               backgroundColor: 'orange',
-              data: []
+              data: [],
             },
           ],
         },
@@ -214,7 +235,7 @@ dialog #close {
                   })
                   return 'Kokku: ' + Number(sum).toFixed(2)
                 },
-                title: (tooltipItem: {label: string}[]) => {
+                title: (tooltipItem: { label: string }[]) => {
                   return tooltipItem[0].label.replace('T', '\n')
                 },
               },
@@ -234,7 +255,9 @@ dialog #close {
               stacked: true,
               ticks: {
                 callback: function (val) {
-                  return ((this as any).getLabelForValue(val) as string).split('T')[1].split(':')[0]
+                  return this.getLabelForValue(val as number).split(
+                    'T',
+                  )[1].split(':')[0]
                 },
               },
             },
@@ -244,7 +267,7 @@ dialog #close {
     })
   }
 
-  static get observedAttributes () {
+  static get observedAttributes() {
     return ['apiUrl']
   }
 
@@ -253,13 +276,13 @@ dialog #close {
   }
 
   makeStyle() {
-    let template = document.createElement('style')
+    const template = document.createElement('style')
     template.innerHTML = this.#style
     this.#shadowRoot.append(template)
   }
 
   loadSettings() {
-    let settings = localStorage.getItem('nordpool-chart-settings')
+    const settings = localStorage.getItem('nordpool-chart-settings')
     if (!settings) {
       return
     }
@@ -274,7 +297,7 @@ dialog #close {
 
     const dialog = document.createElement('dialog')
     dialog.onmousedown = (event) => {
-      const closeButton = this.#shadowRoot.getElementById("close");
+      const closeButton = this.#shadowRoot.getElementById('close')
       if (event.target === closeButton) {
         dialog.close()
       }
@@ -288,27 +311,37 @@ dialog #close {
           <legend>Vali võrguteenus</legend>
         
           <div class="mt-2">
-            <input type="radio" id="transfer_1" name="transfer" value="1" ${this.#settings.transferType === 1 ? "checked" : ''} />
+            <input type="radio" id="transfer_1" name="transfer" value="1" ${
+      this.#settings.transferType === 1 ? 'checked' : ''
+    } />
             <label for="transfer_1">Võrk 1</label>
           </div>
         
           <div class="mt-2">
-            <input type="radio" id="transfer_2" name="transfer" value="2" ${this.#settings.transferType === 2 ? "checked" : ''} />
+            <input type="radio" id="transfer_2" name="transfer" value="2" ${
+      this.#settings.transferType === 2 ? 'checked' : ''
+    } />
             <label for="transfer_2">Võrk 2</label>
           </div>
         
           <div class="mt-2">
-            <input type="radio" id="transfer_3" name="transfer" value="3" ${this.#settings.transferType === 3 ? "checked" : ''} />
+            <input type="radio" id="transfer_3" name="transfer" value="3" ${
+      this.#settings.transferType === 3 ? 'checked' : ''
+    } />
             <label for="transfer_3">Võrk 2 kuutasuga</label>
           </div>
         
           <div class="mt-2">
-            <input type="radio" id="transfer_4" name="transfer" value="4" ${this.#settings.transferType === 4 ? "checked" : ''} />
+            <input type="radio" id="transfer_4" name="transfer" value="4" ${
+      this.#settings.transferType === 4 ? 'checked' : ''
+    } />
             <label for="transfer_4">Võrk 4</label>
           </div>
         
           <div class="mt-2">
-            <input type="radio" id="transfer_5" name="transfer" value="5" ${this.#settings.transferType === 5 ? "checked" : ''} />
+            <input type="radio" id="transfer_5" name="transfer" value="5" ${
+      this.#settings.transferType === 5 ? 'checked' : ''
+    } />
             <label for="transfer_5">Võrk 5</label>
           </div>
           <input type="submit" value="Salvesta" class="mt-2"></input>
@@ -317,19 +350,20 @@ dialog #close {
     </div>
     `
     this.#shadowRoot.append(dialog)
-    
 
     // "Show the dialog" button opens the dialog modally
-    settingsBtn.addEventListener("click", () => {
-      dialog.showModal();
-    });
+    settingsBtn.addEventListener('click', () => {
+      dialog.showModal()
+    })
 
     setTimeout(() => {
-      const form = this.#shadowRoot.querySelector('#settings')! as HTMLFormElement
+      const form = this.#shadowRoot.querySelector(
+        '#settings',
+      )! as HTMLFormElement
       form.addEventListener('submit', (e) => {
         e.preventDefault()
-        const formData = new FormData(e.target as HTMLFormElement);
-        const formProps = Object.fromEntries(formData);
+        const formData = new FormData(e.target as HTMLFormElement)
+        const formProps = Object.fromEntries(formData)
         if (this.#settings.transferType === Number(formProps.transfer)) {
           // Same, do nothing
           return
@@ -337,13 +371,16 @@ dialog #close {
         this.#settings.transferType = Number(formProps.transfer)
 
         // Save settings
-        localStorage.setItem('nordpool-chart-settings', JSON.stringify({
-          transferType: this.#settings.transferType
-        }))
+        localStorage.setItem(
+          'nordpool-chart-settings',
+          JSON.stringify({
+            transferType: this.#settings.transferType,
+          }),
+        )
         dialog.close()
         this.makeChart()
       })
-    });
+    })
   }
 
   makeCanvas() {
@@ -366,7 +403,7 @@ dialog #close {
 
   async getDataForDate(date: Date) {
     const response = await fetch(
-      `${this.apiUrl}/api/ee?day=${date.getDate()}&month=${date.getMonth()}&year=${date.getFullYear()}&currency=EUR`
+      `${this.apiUrl}/api/ee?day=${date.getDate()}&month=${date.getMonth()}&year=${date.getFullYear()}&currency=EUR`,
     )
     const data = await response.json()
     return data
@@ -375,8 +412,7 @@ dialog #close {
   async getThreeDaysData() {
     const currentDate = new Date()
 
-    let neededDate
-    neededDate = new Date(currentDate)
+    const neededDate = new Date(currentDate)
 
     if (new Date().getHours() >= this.#UPDATE_TIME) {
       neededDate.setDate(currentDate.getDate() + 1)
@@ -393,15 +429,15 @@ dialog #close {
   }
 
   type1Price() {
-    let hours = [...new Array(24)]
+    const hours = [...new Array(24)]
       .map(() => {
         return this.#settings.transferTypes[1].day
-      }) 
+      })
     return hours
   }
 
   type2Price() {
-    let hours = [...new Array(24)] // Create mappable array
+    const hours = [...new Array(24)] // Create mappable array
     const today = new Date()
 
     let isWeekend = false
@@ -429,7 +465,7 @@ dialog #close {
   }
 
   type3Price() {
-    let hours = [...new Array(24)] // Create mappable array
+    const hours = [...new Array(24)] // Create mappable array
     const today = new Date()
 
     let isWeekend = false
@@ -457,7 +493,7 @@ dialog #close {
   }
 
   type4Price() {
-    let hours = [...new Array(24)] // Create mappable array
+    const hours = [...new Array(24)] // Create mappable array
     const today = new Date()
 
     let isWeekend = false
@@ -485,7 +521,7 @@ dialog #close {
   }
 
   type5Price() {
-    let hours = [...new Array(24)] // Create mappable array
+    const hours = [...new Array(24)] // Create mappable array
     const today = new Date()
 
     let isWeekend = false
@@ -507,13 +543,16 @@ dialog #close {
     // 9 - okt
     // 10 - nov
     // 11 - dec
-    let month = today.getMonth()
+    const month = today.getMonth()
 
     return hours.map((_, index) => {
       // Deal with weekends
       if (isWeekend) {
         // Weekend peak
-        if (index >= 16 && index <= 20 && [10, 11, 0, 1, 2].includes(month)) {
+        if (
+          index >= 16 && index <= 20 && // Check hours
+          [10, 11, 0, 1, 2].includes(month) // Check month
+        ) {
           return this.#settings.transferTypes[5].weekendPeak
         }
         // Weekend is same as night
@@ -521,7 +560,10 @@ dialog #close {
       }
 
       // Weekday peaks
-      if (((index >= 9 && index <= 12) || (index >= 16 && index <= 20)) && [10, 11, 0, 1, 2].includes(month)) {
+      if (
+        ((index >= 9 && index <= 12) || (index >= 16 && index <= 20)) && // Check hours
+        [10, 11, 0, 1, 2].includes(month) // Check month
+      ) {
         return this.#settings.transferTypes[5].dayPeak
       }
 
