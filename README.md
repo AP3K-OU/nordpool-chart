@@ -24,8 +24,10 @@ Import it in your app entrypoint
 `import '@ap3k/nordpool-chart'`
 
 Use custom web component in HTML:
+
 ```html
 <nordpool-chart apiUrl="https://el.ap3k.pro"></nordpool-chart>
 ```
 
-It accepts one property which is `apiUrl`. It defaults to `window.location.origin`
+It accepts one property which is `apiUrl`. It defaults to
+`window.location.origin`
