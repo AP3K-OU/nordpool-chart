@@ -167,6 +167,15 @@ dialog #close {
         return '#9ad0f5'
       })
 
+      const transferColors = combinedData.map((dataPoint, index) => {
+        if (currentDate === dataPoint.x) {
+          currentPrice = dataPoint.y as string
+          currentTransferPrice = transferPriceMap[index].y
+          return 'ForestGreen'
+        }
+        return '#39A0E5'
+      })
+
       if (this.#chart) {
         this.#chart.destroy()
       }
@@ -179,7 +188,7 @@ dialog #close {
             {
               label: `Võrgutasu ${currentTransferPrice} s/kWh`,
               data: transferPriceMap,
-              backgroundColor: '#39A0E5',
+              backgroundColor: transferColors,
               hoverBorderColor: 'green',
               hoverBorderWidth: 3,
               barPercentage: 1,
