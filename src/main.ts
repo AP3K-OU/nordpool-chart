@@ -1,4 +1,6 @@
 // TODO: Võrgutasud ei sisalda riikliku pühi
+// TODO: There's bug, where transfer price is not correctly calculated for next day
+// For example, when it's currently Sunday, then Monday will have wrong transfer price
 import {
   BarController,
   BarElement,
@@ -125,18 +127,19 @@ dialog #close {
       let transferPrice: number[] = [
         ...this.type5Price(),
         ...this.type5Price(),
+        this.type5Price()[0],
       ]
       if (this.#settings.transferType === 4) {
-        transferPrice = [...this.type4Price(), ...this.type4Price()]
+        transferPrice = [...this.type4Price(), ...this.type4Price(), this.type4Price()[0]]
       }
       if (this.#settings.transferType === 3) {
-        transferPrice = [...this.type3Price(), ...this.type3Price()]
+        transferPrice = [...this.type3Price(), ...this.type3Price(), this.type3Price()[0]]
       }
       if (this.#settings.transferType === 2) {
-        transferPrice = [...this.type2Price(), ...this.type2Price()]
+        transferPrice = [...this.type2Price(), ...this.type2Price(), this.type2Price()[0]]
       }
       if (this.#settings.transferType === 1) {
-        transferPrice = [...this.type1Price(), ...this.type1Price()]
+        transferPrice = [...this.type1Price(), ...this.type1Price(), this.type1Price()[0]]
       }
 
       let currentPrice = '0.0'
