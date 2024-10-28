@@ -127,19 +127,18 @@ dialog #close {
       let transferPrice: number[] = [
         ...this.type5Price(),
         ...this.type5Price(),
-        this.type5Price()[0],
       ]
       if (this.#settings.transferType === 4) {
-        transferPrice = [...this.type4Price(), ...this.type4Price(), this.type4Price()[0]]
+        transferPrice = [...this.type4Price(), ...this.type4Price()]
       }
       if (this.#settings.transferType === 3) {
-        transferPrice = [...this.type3Price(), ...this.type3Price(), this.type3Price()[0]]
+        transferPrice = [...this.type3Price(), ...this.type3Price()]
       }
       if (this.#settings.transferType === 2) {
-        transferPrice = [...this.type2Price(), ...this.type2Price(), this.type2Price()[0]]
+        transferPrice = [...this.type2Price(), ...this.type2Price()]
       }
       if (this.#settings.transferType === 1) {
-        transferPrice = [...this.type1Price(), ...this.type1Price(), this.type1Price()[0]]
+        transferPrice = [...this.type1Price(), ...this.type1Price()]
       }
 
       let currentPrice = '0.0'
