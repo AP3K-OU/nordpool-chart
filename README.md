@@ -6,7 +6,6 @@ Includes option to switch between network services:
 
 - Võrk 1
 - Võrk 2
-- Võrk 2 kuutasuga
 - Võrk 4
 - Võrk 5
 

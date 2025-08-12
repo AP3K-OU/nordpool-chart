@@ -42,25 +42,21 @@ class NordpoolChart extends HTMLElement {
     transferType: 5,
     transferTypes: {
       1: {
-        day: 8.8,
+        day: 9.57,
       },
       2: {
-        day: 10.59,
-        night: 6.16,
-      },
-      3: {
-        day: 6.92,
-        night: 4.00,
+        day: 7.53,
+        night: 4.35,
       },
       4: {
-        day: 4.50,
-        night: 2.56,
+        day: 4.58,
+        night: 2.6,
       },
       5: {
-        day: 6.27,
-        dayPeak: 9.69,
-        night: 3.6,
-        weekendPeak: 5.61,
+        day: 6.56,
+        dayPeak: 10.14,
+        night: 3.76,
+        weekendPeak: 5.88,
       },
     },
   }
@@ -130,9 +126,6 @@ dialog #close {
       ]
       if (this.#settings.transferType === 4) {
         transferPrice = [...this.type4Price(), ...this.type4Price()]
-      }
-      if (this.#settings.transferType === 3) {
-        transferPrice = [...this.type3Price(), ...this.type3Price()]
       }
       if (this.#settings.transferType === 2) {
         transferPrice = [...this.type2Price(), ...this.type2Price()]
@@ -283,7 +276,7 @@ dialog #close {
   }
 
   get apiUrl() {
-    return this.getAttribute('apiUrl') || window.location.origin
+    return this.getAttribute('apiUrl') || globalThis.location.origin
   }
 
   makeStyle() {
@@ -333,13 +326,6 @@ dialog #close {
       this.#settings.transferType === 2 ? 'checked' : ''
     } />
             <label for="transfer_2">Võrk 2</label>
-          </div>
-        
-          <div class="mt-2">
-            <input type="radio" id="transfer_3" name="transfer" value="3" ${
-      this.#settings.transferType === 3 ? 'checked' : ''
-    } />
-            <label for="transfer_3">Võrk 2 kuutasuga</label>
           </div>
         
           <div class="mt-2">
@@ -472,34 +458,6 @@ dialog #close {
 
       // Weekday nights
       return this.#settings.transferTypes[2].night
-    })
-  }
-
-  type3Price() {
-    const hours = [...new Array(24)] // Create mappable array
-    const today = new Date()
-
-    let isWeekend = false
-    // Check if Sunday or Monday
-    if (today.getDay() === 0 || today.getDay() === 6) {
-      // Is weekend
-      isWeekend = true
-    }
-
-    return hours.map((_, index) => {
-      // Deal with weekends
-      if (isWeekend) {
-        // Weekend is same as night
-        return this.#settings.transferTypes[3].night
-      }
-
-      // Weekday day
-      if (index >= 7 && index <= 22) {
-        return this.#settings.transferTypes[3].day
-      }
-
-      // Weekday nights
-      return this.#settings.transferTypes[3].night
     })
   }
 
