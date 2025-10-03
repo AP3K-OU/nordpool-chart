@@ -1,6 +1,6 @@
 {
   "name": "@ap3k/nordpool-chart",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "exports": "./src/main.ts",
   "compilerOptions": {
     "lib": [
