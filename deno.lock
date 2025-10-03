@@ -333,12 +333,6 @@
     "dependencies": [
       "npm:chart.js@^4.5.0",
       "npm:vite@^5.2.9"
-    ],
-    "packageJson": {
-      "dependencies": [
-        "npm:chart.js@^4.5.0",
-        "npm:vite@^7.1.2"
-      ]
-    }
+    ]
   }
 }
