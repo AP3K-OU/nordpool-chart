@@ -395,7 +395,15 @@ dialog #close {
     const year = date.getFullYear()
     const hours = String(date.getHours()).padStart(2, '0')
 
-    return `${day}.${month}.${year}T${hours}:00`
+    // Round minutes to lowerst 15
+    // 14:35 -> 14:30
+    // 14:58 -> 14:45
+    // etc
+    const roundedMinutes = Math.floor(date.getMinutes() / 15) * 15
+    const minutesPadded = String(roundedMinutes).padStart(2, '0')
+
+
+    return `${day}.${month}.${year}T${hours}:${minutesPadded}`
   }
 
   async getDataForDate(date: Date) {
