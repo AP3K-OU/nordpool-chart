@@ -426,7 +426,7 @@ dialog #close {
   }
 
   type1Price() {
-    const hours = [...new Array(24)]
+    const hours = [...new Array(96)]
       .map(() => {
         return this.#settings.transferTypes[1].day
       })
@@ -434,7 +434,7 @@ dialog #close {
   }
 
   type2Price() {
-    const hours = [...new Array(24)] // Create mappable array
+    const hours = [...new Array(96)] // Create mappable array
     const today = new Date()
 
     let isWeekend = false
@@ -452,7 +452,8 @@ dialog #close {
       }
 
       // Weekday day
-      if (index >= 7 && index <= 22) {
+      // 7 to 22 päev
+      if (index >= 24 && index <= 84) {
         return this.#settings.transferTypes[2].day
       }
 
@@ -462,7 +463,7 @@ dialog #close {
   }
 
   type4Price() {
-    const hours = [...new Array(24)] // Create mappable array
+    const hours = [...new Array(96)] // Create mappable array
     const today = new Date()
 
     let isWeekend = false
@@ -480,7 +481,7 @@ dialog #close {
       }
 
       // Weekday day
-      if (index >= 7 && index <= 22) {
+      if (index >= 24 && index <= 84) {
         return this.#settings.transferTypes[4].day
       }
 
@@ -490,7 +491,7 @@ dialog #close {
   }
 
   type5Price() {
-    const hours = [...new Array(24)] // Create mappable array
+    const hours = [...new Array(96)] // Create mappable array
     const today = new Date()
 
     let isWeekend = false
@@ -519,7 +520,7 @@ dialog #close {
       if (isWeekend) {
         // Weekend peak
         if (
-          index >= 16 && index <= 20 && // Check hours
+          index >= 60 && index <= 76 && // Check hours
           [10, 11, 0, 1, 2].includes(month) // Check month
         ) {
           return this.#settings.transferTypes[5].weekendPeak
@@ -530,14 +531,14 @@ dialog #close {
 
       // Weekday peaks
       if (
-        ((index >= 9 && index <= 12) || (index >= 16 && index <= 20)) && // Check hours
+        ((index >= 32 && index <= 44) || (index >= 60 && index <= 76)) && // Check hours
         [10, 11, 0, 1, 2].includes(month) // Check month
       ) {
         return this.#settings.transferTypes[5].dayPeak
       }
 
       // Weekday day
-      if (index >= 7 && index <= 22) {
+      if (index >= 24 && index <= 84) {
         return this.#settings.transferTypes[5].day
       }
 
